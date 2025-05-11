@@ -7,8 +7,10 @@ import cors from 'cors';
 
 const server = http.createServer(app);
 
+const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
+
 const io = new Server(server, {
-  cors: { origin: 'http://localhost:5173', methods: ['GET', 'POST'] } // Adjust for your frontend
+  cors: { origin: FRONTEND_URL, methods: ['GET', 'POST'] }
 });
 
 // Expose io on the app for access in API routes
@@ -245,7 +247,7 @@ expressApp.post('/challenge/:id/join', async (req, res, next) => {
 });
 
 // Update CORS to allow all origins for deployment
-app.use(cors({ origin: '*', methods: ['GET', 'POST', 'PATCH', 'OPTIONS'], credentials: true }));
+app.use(cors({ origin: FRONTEND_URL, methods: ['GET', 'POST', 'PATCH', 'OPTIONS'], credentials: true }));
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {

@@ -160,7 +160,78 @@ app.get('/random-cities', async (req, res) => {
   }
 });
 
-// Update highscore endpoint
+// Single player: Get a random question
+app.get('/random-question', async (req, res) => {
+  try {
+    // Get all destination IDs
+    const { data: ids, error: idError } = await supabase
+      .from('destinations')
+      .select('id');
+    if (idError) throw idError;
+    if (!ids || ids.length === 0) {
+      return res.status(404).json({ error: 'No destinations found' });
+    }
+    // Pick a random ID
+    const randomIndex = Math.floor(Math.random() * ids.length);
+    const randomId = ids[randomIndex].id;
+    // Fetch the row by ID
+    const { data, error } = await supabase
+      .from('destinations')
+      .select('*')
+      .eq('id', randomId)
+      .single();
+    if (error) throw error;
+    // Get 3 random wrong cities
+    let { data: wrongCities, error: cityError } = await supabase
+      .from('cities')
+      .select('city');
+    if (cityError) throw cityError;
+    wrongCities = wrongCities.filter(c => c.city !== data.city);
+    const shuffledCities = wrongCities.sort(() => 0.5 - Math.random());
+    const options = [data.city, ...shuffledCities.slice(0, 3).map(c => c.city)].sort(() => 0.5 - Math.random());
+    res.json({
+      id: data.id,
+      clues: data.clues,
+      options,
+      fun_fact: data.fun_fact,
+      trivia: data.trivia
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Single player: Check answer
+app.post('/check-answer', async (req, res) => {
+  const { question_id, guess } = req.body;
+  try {
+    const { data: dest, error } = await supabase
+      .from('destinations')
+      .select('*')
+      .eq('id', question_id)
+      .single();
+    if (error || !dest) {
+      return res.status(404).json({ error: 'Question not found' });
+    }
+    const correct = guess === dest.city;
+    if (correct) {
+      res.json({
+        correct,
+        correct_answer: dest.city,
+        fun_fact: dest.fun_fact,
+        trivia: dest.trivia
+      });
+    } else {
+      res.json({
+        correct
+      });
+    }
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Single player: Update highscore
 app.post('/update-highscore', authMiddleware, async (req, res) => {
   let { highscore } = req.body;
   const username = req.user.username;
