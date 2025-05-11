@@ -1,14 +1,16 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-function Login({ setToken, setAuthMode, authError, setAuthError, authLoading }) {
+function Login({ setToken, authError, setAuthError, authLoading }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setAuthError(null);
     try {
-      const res = await fetch('http://localhost:3000/login', {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password })
@@ -53,7 +55,7 @@ function Login({ setToken, setAuthMode, authError, setAuthError, authLoading }) 
         </button>
       </form>
       <div style={{ textAlign: 'center', marginTop: 8 }}>
-        <button onClick={() => { setAuthMode('register'); setAuthError(null); }} style={{ fontSize: 14, background: 'none', border: 'none', color: '#007bff', cursor: 'pointer' }}>
+        <button onClick={() => { navigate('/register'); setAuthError(null); }} style={{ fontSize: 14, background: 'none', border: 'none', color: '#007bff', cursor: 'pointer' }}>
           No account? Register
         </button>
       </div>

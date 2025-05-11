@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { io } from 'socket.io-client';
 
-const socket = io('http://localhost:3000'); // Use your backend URL
+const socket = io(import.meta.env.VITE_API_URL); // Use your backend URL from env
 
 function ChallengePage({ user }) {
   const { challengeId } = useParams();
