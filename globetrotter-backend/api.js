@@ -192,9 +192,7 @@ app.get('/random-question', async (req, res) => {
     res.json({
       id: data.id,
       clues: data.clues,
-      options,
-      fun_fact: data.fun_fact,
-      trivia: data.trivia
+      options
     });
   } catch (err) {
     res.status(500).json({ error: err.message });
