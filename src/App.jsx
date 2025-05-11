@@ -61,7 +61,7 @@ function App() {
     }
     const checkAuth = async () => {
       try {
-        const res = await fetch('http://localhost:3000/me', {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/me`, {
           headers: { Authorization: `Bearer ${token}` }
         })
         const data = await res.json()
@@ -92,7 +92,7 @@ function App() {
   const saveHighscore = async () => {
     if (!token || score <= highscore) return;
     try {
-      const res = await fetch('http://localhost:3000/update-highscore', {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/update-highscore`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -102,7 +102,7 @@ function App() {
       });
       if (res.ok) {
         // Fetch the updated user info to get the new highscore
-        const meRes = await fetch('http://localhost:3000/me', {
+        const meRes = await fetch(`${import.meta.env.VITE_API_URL}/me`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         const meData = await meRes.json();
@@ -117,7 +117,7 @@ function App() {
   const handleChallengeFriend = async () => {
     if (!user || !token) return;
     try {
-      const res = await fetch('http://localhost:3000/create-challenge', {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/create-challenge`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -144,7 +144,7 @@ function App() {
     const challengeId = match[1];
     // Call backend join endpoint
     try {
-      const res = await fetch(`http://localhost:3000/challenge/${challengeId}/join`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/challenge/${challengeId}/join`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

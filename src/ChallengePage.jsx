@@ -26,7 +26,7 @@ function ChallengePage({ user }) {
     const fetchChallenge = async () => {
       setLoading(true);
       try {
-        const res = await fetch(`http://localhost:3000/challenge/${challengeId}`);
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/challenge/${challengeId}`);
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || 'Failed to fetch challenge');
         setChallenge(data);
@@ -46,7 +46,7 @@ function ChallengePage({ user }) {
     const isChallenger = user.username === challenge.challenger_username;
     if (!isChallenger && !challenge.friend_username) {
       setJoining(true);
-      fetch(`http://localhost:3000/challenge/${challengeId}/join`, {
+      fetch(`${import.meta.env.VITE_API_URL}/challenge/${challengeId}/join`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -65,7 +65,7 @@ function ChallengePage({ user }) {
   // Always call join endpoint when user loads a challenge (not just if friend_username is missing)
   useEffect(() => {
     if (!challengeId || !user) return;
-    fetch(`http://localhost:3000/challenge/${challengeId}/join`, {
+    fetch(`${import.meta.env.VITE_API_URL}/challenge/${challengeId}/join`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -82,7 +82,7 @@ function ChallengePage({ user }) {
       setSelected(null);
       setResult(null);
       try {
-        const res = await fetch(`http://localhost:3000/challenge/${challengeId}/question/${currentIndex}`);
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/challenge/${challengeId}/question/${currentIndex}`);
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || 'Failed to fetch question');
         setCurrentQuestion(data);
@@ -143,7 +143,7 @@ function ChallengePage({ user }) {
     if (selected || !currentQuestion) return;
     setSelected(option);
     try {
-      const res = await fetch(`http://localhost:3000/challenge/${challengeId}/answer/${currentIndex}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/challenge/${challengeId}/answer/${currentIndex}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ guess: option })
@@ -183,7 +183,7 @@ function ChallengePage({ user }) {
     if (!user) return;
     setSubmitting(true);
     try {
-      const res = await fetch(`http://localhost:3000/challenge/${challengeId}/submit`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/challenge/${challengeId}/submit`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

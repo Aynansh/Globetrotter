@@ -3,6 +3,7 @@ import { Server } from 'socket.io';
 import app from './api.js';
 import supabase from './index.js';
 import express from 'express';
+import cors from 'cors';
 
 const server = http.createServer(app);
 
@@ -242,6 +243,9 @@ expressApp.post('/challenge/:id/join', async (req, res, next) => {
   } catch {}
   next();
 });
+
+// Update CORS to allow all origins for deployment
+app.use(cors({ origin: '*', methods: ['GET', 'POST', 'PATCH', 'OPTIONS'], credentials: true }));
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {

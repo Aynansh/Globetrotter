@@ -27,7 +27,7 @@ function QuizPage({
     setResult(null);
     setShowResult(false);
     try {
-      const res = await fetch('http://localhost:3000/random-question');
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/random-question`);
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to fetch question');
       setQuestion(data);
@@ -51,7 +51,7 @@ function QuizPage({
     setSelected(option);
     setShowResult(false);
     try {
-      const res = await fetch('http://localhost:3000/check-answer', {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/check-answer`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ question_id: question.id, guess: option })
