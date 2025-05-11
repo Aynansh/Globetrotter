@@ -176,8 +176,19 @@ function App() {
 
   return (
     <Routes>
-      <Route path="/" element={<LandingPage user={user} onStartQuiz={() => setPage('quiz')} onChallengeFriend={handleChallengeFriend} onJoinChallenge={handleJoinChallenge} onLogout={handleLogout} />} />
-      <Route path="/quiz" element={<QuizPage user={user} score={score} setScore={setScore} highscore={highscore} setHighscore={setHighscore} />} />
+      <Route path="/" element={<LandingPage user={user} onStartQuiz={() => navigate('/quiz')} onChallengeFriend={handleChallengeFriend} onJoinChallenge={handleJoinChallenge} onLogout={handleLogout} />} />
+      <Route path="/quiz" element={<QuizPage 
+        user={user}
+        score={score}
+        setScore={setScore}
+        highscore={highscore}
+        setHighscore={setHighscore}
+        onGoBack={() => navigate('/')}
+        onLogout={handleLogout}
+        onSaveHighscore={saveHighscore}
+        canSaveHighscore={score > highscore}
+        onCorrectAnswer={() => setScore((prev) => prev + 1)}
+      />} />
       <Route path="/challenge/:challengeId" element={<ChallengePage user={user} />} />
       {/* Add other authenticated routes as needed */}
       <Route path="*" element={<Navigate to="/" replace />} />
